@@ -1,4 +1,53 @@
-class Main {}
+fun main() {
+    val service = ChatService()
+
+    // Создание чата и отправка сообщений
+    service.createMessage(1, 1, "Привет!")
+    service.createMessage(2, 1, "Привет, как дела?")
+    service.createMessage(1, 1, "Всё хорошо, спасибо!")
+    service.createMessage(2, 1, "Отлично")
+
+    // Получение списка чатов
+    val chats = service.getChats(1)
+    println("Список чатов:")
+    chats.forEachIndexed { index, chat ->
+        println("Чат ${index + 1} (ID: ${chat.id})")
+    }
+
+    // Получение количества непрочитанных чатов
+    val unreadChatsCount = service.getUnreadChatsCount(1)
+    println("Количество непрочитанных чатов: $unreadChatsCount")
+
+    // Получение последних сообщений из чатов
+    val latestMessages = service.getLatestMessage(1)
+    println("Последние сообщения из чатов:")
+    latestMessages.forEachIndexed { index, message ->
+        println("Сообщение ${index + 1}: $message")
+    }
+
+    // Получение сообщений из чата
+    val messages = service.getMessageFromChat(1, 1, 0, 2)
+    println("Сообщения из чата 1:")
+    messages.forEachIndexed { index, message ->
+        println("Сообщение ${index + 1} (ID: ${message.id}): ${message.content}")
+    }
+
+    // Удаление сообщения
+    service.deleteMessage(1, 1, 1)
+    val updatedMessages = service.getMessageFromChat(1, 1, 0, 10)
+    println("Сообщения из чата 1 после удаления:")
+    updatedMessages.forEachIndexed { index, message ->
+        println("Сообщение ${index + 1} (ID: ${message.id}): ${message.content}")
+    }
+
+    // Удаление чата
+    service.deleteChat(1)
+    val remainingChats = service.getChats(1)
+    println("Оставшиеся чаты после удаления:")
+    remainingChats.forEachIndexed { index, chat ->
+        println("Чат ${index + 1} (ID: ${chat.id})")
+    }
+}
 
 data class Message(val id: Int, val senderId: Int, var content: String, var isRead: Boolean = false)
 
